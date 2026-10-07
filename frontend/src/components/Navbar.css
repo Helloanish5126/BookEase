@@ -1,0 +1,502 @@
+/* =========================================
+   BOOKEASE NAVBAR
+   ========================================= */
+
+.navbar-wrapper {
+  position: relative;
+  z-index: 1000;
+}
+
+.bookease-navbar {
+  position: fixed;
+  top: 18px;
+  left: 50%;
+  width: min(1400px, 92%);
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 22px;
+  transform: translateX(-50%);
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+
+  background: rgba(5, 5, 10, 0.78);
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+
+  box-shadow:
+    0 15px 50px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.035);
+}
+
+/* =========================================
+   LOGO
+   ========================================= */
+
+.navbar-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  color: white;
+}
+
+.logo-mark {
+  width: 39px;
+  height: 39px;
+
+  display: grid;
+  place-items: center;
+
+  border: 1px solid rgba(192, 132, 252, 0.45);
+  border-radius: 11px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #7c3aed,
+      #a855f7
+    );
+
+  color: white;
+
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+
+  box-shadow:
+    0 0 22px rgba(139, 92, 246, 0.25);
+
+  transition:
+    transform 250ms ease,
+    box-shadow 250ms ease;
+}
+
+.navbar-logo:hover .logo-mark {
+  transform: rotate(-4deg) scale(1.05);
+
+  box-shadow:
+    0 0 35px rgba(139, 92, 246, 0.45);
+}
+
+.logo-text {
+  color: #ffffff;
+
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+
+  letter-spacing: -0.035em;
+}
+
+.logo-text span {
+  color: #c084fc;
+}
+
+/* =========================================
+   DESKTOP NAVIGATION
+   ========================================= */
+
+.navbar-links {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-left: auto;
+  margin-right: 30px;
+}
+
+.nav-link {
+  position: relative;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 10px 14px;
+
+  color: #85858e;
+
+  font-size: 12px;
+  font-weight: 600;
+
+  border-radius: 9px;
+
+  transition:
+    color 180ms ease,
+    background 180ms ease;
+}
+
+.nav-link::after {
+  content: "";
+
+  position: absolute;
+  left: 50%;
+  bottom: 3px;
+
+  width: 0;
+  height: 2px;
+
+  transform: translateX(-50%);
+
+  border-radius: 10px;
+
+  background: linear-gradient(
+    90deg,
+    #8b5cf6,
+    #a855f7
+  );
+
+  box-shadow:
+    0 0 10px rgba(139, 92, 246, 0.7);
+
+  transition: width 220ms ease;
+}
+
+.nav-link:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.nav-link:hover::after {
+  width: 22px;
+}
+
+.nav-link.active {
+  color: #ffffff;
+}
+
+.nav-link.active::after {
+  width: 22px;
+}
+
+/* =========================================
+   NAVBAR ACTIONS
+   ========================================= */
+
+.navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/*
+   These are now React Router <Link> elements,
+   but we style them exactly like buttons.
+*/
+
+.nav-login,
+.nav-signup {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  text-decoration: none;
+
+  font-family: "Inter", sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    transform 220ms ease,
+    color 220ms ease,
+    background 220ms ease,
+    border-color 220ms ease,
+    box-shadow 220ms ease;
+}
+
+/* Login */
+
+.nav-login {
+  min-width: 72px;
+  height: 40px;
+
+  padding: 0 15px;
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 9px;
+
+  color: #a1a1aa;
+
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.nav-login:hover {
+  transform: translateY(-2px);
+
+  color: #ffffff;
+
+  border-color: rgba(139, 92, 246, 0.35);
+
+  background: rgba(139, 92, 246, 0.06);
+
+  box-shadow:
+    0 0 22px rgba(139, 92, 246, 0.12);
+}
+
+/* Get Started */
+
+.nav-signup {
+  min-width: 112px;
+  height: 40px;
+
+  padding: 0 17px;
+
+  border: 1px solid rgba(192, 132, 252, 0.35);
+  border-radius: 9px;
+
+  color: #ffffff;
+
+  background:
+    linear-gradient(
+      135deg,
+      #7c3aed,
+      #a855f7
+    );
+
+  box-shadow:
+    0 0 22px rgba(139, 92, 246, 0.25);
+}
+
+.nav-signup:hover {
+  transform: translateY(-2px) scale(1.02);
+
+  border-color: rgba(216, 180, 254, 0.65);
+
+  box-shadow:
+    0 0 35px rgba(139, 92, 246, 0.45),
+    0 10px 25px rgba(0, 0, 0, 0.25);
+}
+
+/* =========================================
+   MOBILE MENU BUTTON
+   ========================================= */
+
+.mobile-menu-button {
+  display: none;
+
+  width: 42px;
+  height: 42px;
+
+  padding: 0;
+
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 5px;
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+
+  background: rgba(255, 255, 255, 0.03);
+
+  cursor: pointer;
+}
+
+.mobile-menu-button span {
+  display: block;
+
+  width: 17px;
+  height: 2px;
+
+  border-radius: 10px;
+
+  background: #a1a1aa;
+
+  transition:
+    transform 220ms ease,
+    opacity 220ms ease,
+    background 220ms ease;
+}
+
+.mobile-menu-button:hover span {
+  background: #c084fc;
+}
+
+.mobile-menu-button.open span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.mobile-menu-button.open span:nth-child(2) {
+  opacity: 0;
+}
+
+.mobile-menu-button.open span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+/* =========================================
+   MOBILE NAVIGATION
+   ========================================= */
+
+.mobile-navigation {
+  position: fixed;
+
+  top: 100px;
+  left: 50%;
+
+  width: min(1400px, 92%);
+
+  padding: 18px;
+
+  transform:
+    translateX(-50%)
+    translateY(-15px);
+
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+
+  background: rgba(5, 5, 10, 0.94);
+
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.5);
+
+  transition:
+    opacity 220ms ease,
+    transform 220ms ease,
+    visibility 220ms ease;
+}
+
+.mobile-navigation.show {
+  transform:
+    translateX(-50%)
+    translateY(0);
+
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.mobile-navigation > a {
+  display: block;
+
+  padding: 13px 12px;
+  margin-bottom: 3px;
+
+  border-radius: 9px;
+
+  color: #8f8f98;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  transition:
+    color 180ms ease,
+    background 180ms ease;
+}
+
+.mobile-navigation > a:hover {
+  color: #ffffff;
+  background: rgba(139, 92, 246, 0.07);
+}
+
+.mobile-actions {
+  display: flex;
+
+  gap: 10px;
+
+  margin-top: 12px;
+  padding-top: 14px;
+
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.mobile-actions .nav-login,
+.mobile-actions .nav-signup {
+  flex: 1;
+}
+
+/* =========================================
+   TABLET
+   ========================================= */
+
+@media (max-width: 1000px) {
+  .navbar-links {
+    gap: 2px;
+    margin-right: 15px;
+  }
+
+  .nav-link {
+    padding: 9px 9px;
+    font-size: 11px;
+  }
+
+  .navbar-actions {
+    gap: 7px;
+  }
+
+  .nav-login {
+    min-width: 65px;
+    padding: 0 12px;
+  }
+
+  .nav-signup {
+    min-width: 100px;
+    padding: 0 13px;
+  }
+}
+
+/* =========================================
+   MOBILE
+   ========================================= */
+
+@media (max-width: 760px) {
+  .bookease-navbar {
+    top: 12px;
+
+    width: 94%;
+    height: 64px;
+
+    padding: 0 15px;
+
+    border-radius: 15px;
+  }
+
+  .logo-mark {
+    width: 35px;
+    height: 35px;
+
+    font-size: 18px;
+  }
+
+  .logo-text {
+    font-size: 18px;
+  }
+
+  .navbar-links,
+  .navbar-actions {
+    display: none;
+  }
+
+  .mobile-menu-button {
+    display: flex;
+  }
+}
+
+/* =========================================
+   SMALL MOBILE
+   ========================================= */
+
+@media (max-width: 420px) {
+  .bookease-navbar {
+    width: 94%;
+  }
+
+  .logo-text {
+    font-size: 17px;
+  }
+
+  .mobile-navigation {
+    width: 94%;
+  }
+}

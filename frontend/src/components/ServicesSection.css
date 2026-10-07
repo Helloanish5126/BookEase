@@ -1,0 +1,437 @@
+/* =========================================
+   SERVICES SECTION
+   ========================================= */
+
+.services-section {
+  position: relative;
+
+  padding: 110px 0 100px;
+
+  overflow: hidden;
+}
+
+
+/* Ambient Purple Glow */
+
+.services-section::before {
+  content: "";
+
+  position: absolute;
+
+  width: 500px;
+  height: 500px;
+
+  left: -300px;
+  top: 20%;
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(139, 92, 246, 0.08),
+      transparent 68%
+    );
+
+  filter: blur(30px);
+
+  pointer-events: none;
+}
+
+
+/* Ambient Green Glow */
+
+.services-section::after {
+  content: "";
+
+  position: absolute;
+
+  width: 400px;
+  height: 400px;
+
+  right: -250px;
+  bottom: 5%;
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(16, 185, 129, 0.06),
+      transparent 68%
+    );
+
+  filter: blur(30px);
+
+  pointer-events: none;
+}
+
+
+/* =========================================
+   SECTION HEADING
+   ========================================= */
+
+.services-heading {
+  position: relative;
+
+  z-index: 2;
+
+  display: grid;
+
+  grid-template-columns:
+    1fr 0.7fr;
+
+  gap: 60px;
+
+  align-items: end;
+
+  margin-bottom: 35px;
+}
+
+
+.section-eyebrow {
+  display: block;
+
+  margin-bottom: 13px;
+
+  color:
+    var(--green-light);
+
+  font-size: 9px;
+
+  font-weight: 700;
+
+  letter-spacing: 2px;
+}
+
+
+.services-heading h2 {
+  font-size:
+    clamp(38px, 4vw, 56px);
+
+  letter-spacing:
+    -2.5px;
+}
+
+
+.services-heading h2 span {
+  background:
+    linear-gradient(
+      90deg,
+      var(--purple-light),
+      var(--blue-light)
+    );
+
+  -webkit-background-clip: text;
+
+  background-clip: text;
+
+  -webkit-text-fill-color: transparent;
+}
+
+
+.services-heading > p {
+  max-width: 430px;
+
+  justify-self: end;
+
+  color:
+    var(--text-secondary);
+
+  font-size: 13px;
+
+  line-height: 1.8;
+}
+
+
+/* =========================================
+   RESULT BAR
+   ========================================= */
+
+.service-result-bar {
+  position: relative;
+
+  z-index: 2;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  margin-bottom: 18px;
+
+  padding: 11px 14px;
+
+  border:
+    1px solid
+    rgba(255, 255, 255, 0.055);
+
+  border-radius: 9px;
+
+  background:
+    rgba(255, 255, 255, 0.018);
+
+  color:
+    var(--text-muted);
+
+  font-size: 9px;
+
+  text-transform: uppercase;
+
+  letter-spacing: 0.8px;
+}
+
+
+.service-result-bar strong {
+  color:
+    rgba(255, 255, 255, 0.8);
+
+  font-weight: 600;
+}
+
+
+.live-service-status {
+  display: flex;
+
+  align-items: center;
+
+  gap: 7px;
+
+  color:
+    var(--green-light);
+
+  font-size: 8px;
+}
+
+
+.live-service-status span {
+  width: 5px;
+  height: 5px;
+
+  border-radius: 50%;
+
+  background:
+    var(--green);
+
+  box-shadow:
+    0 0 9px
+    var(--green);
+
+  animation:
+    pulseDot 2s infinite;
+}
+
+
+/* =========================================
+   SERVICE GRID
+   ========================================= */
+
+.services-grid {
+  position: relative;
+
+  z-index: 2;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, 1fr);
+
+  gap: 17px;
+}
+
+
+/* =========================================
+   FOOTER BUTTON
+   ========================================= */
+
+.services-footer {
+  position: relative;
+
+  z-index: 2;
+
+  display: flex;
+
+  justify-content: center;
+
+  margin-top: 40px;
+}
+
+
+.view-services-button {
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  padding:
+    13px 19px;
+
+  border:
+    1px solid
+    rgba(255, 255, 255, 0.09);
+
+  border-radius: 10px;
+
+  color:
+    rgba(255, 255, 255, 0.75);
+
+  background:
+    rgba(255, 255, 255, 0.025);
+
+  font-size: 11px;
+
+  font-weight: 500;
+
+  cursor: pointer;
+
+  transition:
+    all 250ms ease;
+}
+
+
+.view-services-button span {
+  color:
+    var(--purple-light);
+
+  font-size: 15px;
+
+  transition:
+    transform 250ms ease;
+}
+
+
+.view-services-button:hover {
+  color: white;
+
+  border-color:
+    rgba(139, 92, 246, 0.35);
+
+  background:
+    rgba(139, 92, 246, 0.07);
+
+  box-shadow:
+    0 0 25px
+      rgba(139, 92, 246, 0.15);
+
+  transform:
+    translateY(-3px);
+}
+
+
+.view-services-button:hover span {
+  transform:
+    translateX(4px);
+}
+
+
+/* Show Less */
+
+.view-services-button span.arrow-up {
+  transform:
+    rotate(-90deg);
+}
+
+
+.view-services-button:hover
+span.arrow-up {
+  transform:
+    rotate(-90deg)
+    translateX(4px);
+}
+
+
+/* =========================================
+   ANIMATION
+   ========================================= */
+
+@keyframes pulseDot {
+  0%,
+  100% {
+    transform: scale(1);
+
+    opacity: 1;
+  }
+
+  50% {
+    transform: scale(1.5);
+
+    opacity: 0.55;
+  }
+}
+
+
+/* =========================================
+   TABLET
+   ========================================= */
+
+@media (max-width: 1150px) {
+
+  .services-grid {
+    grid-template-columns:
+      repeat(2, 1fr);
+  }
+
+}
+
+
+/* =========================================
+   SMALL TABLET
+   ========================================= */
+
+@media (max-width: 800px) {
+
+  .services-heading {
+    grid-template-columns: 1fr;
+
+    gap: 18px;
+
+    text-align: center;
+  }
+
+
+  .services-heading > p {
+    justify-self: center;
+  }
+
+
+  .service-result-bar {
+    margin-top: 25px;
+  }
+
+}
+
+
+/* =========================================
+   MOBILE
+   ========================================= */
+
+@media (max-width: 600px) {
+
+  .services-section {
+    padding:
+      80px 0;
+  }
+
+
+  .services-grid {
+    grid-template-columns:
+      1fr;
+  }
+
+
+  .service-result-bar {
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    gap: 9px;
+  }
+
+
+  .services-heading h2 {
+    font-size: 40px;
+  }
+
+}
