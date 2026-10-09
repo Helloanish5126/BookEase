@@ -1,109 +1,90 @@
+
+import { Link } from "react-router-dom";
 import "./Footer.css";
 
 function Footer() {
   return (
     <footer className="bookease-footer">
-      <div className="footer-top-line"></div>
+      <div className="footer-main">
+        <div className="footer-brand">
+          <Link to="/" className="footer-logo">
+            <img
+              src="/bookease-logo.png"
+              alt="BookEase logo"
+              className="footer-brand-logo"
+            />
+            <span className="footer-brand-name">
+              Book<span>Ease</span>
+            </span>
+          </Link>
 
-      <div className="container">
-        <div className="footer-main">
+          <p>
+            Smart appointments. Zero waiting.
+            <br />
+            One simple platform for your time.
+          </p>
 
-          <div className="footer-brand">
-            <a href="/" className="footer-logo">
-              <span className="footer-logo-mark">B</span>
-
-              <span className="footer-logo-text">
-                Book<span>Ease</span>
-              </span>
-            </a>
-
-            <p>
-              Smart appointments. Zero waiting.
-              <br />
-              One simple platform for your time.
-            </p>
-
-            <div className="footer-status">
-              <span className="footer-status-dot"></span>
-              <span>Platform operational</span>
-            </div>
+          <div className="footer-status">
+            <span className="footer-status-dot"></span>
+            Platform operational
           </div>
-
-          <div className="footer-column">
-            <h4>Platform</h4>
-
-            <a href="#services">Services</a>
-            <a href="#how-it-works">How It Works</a>
-            <a href="#about">About BookEase</a>
-            <a href="#contact">Contact</a>
-          </div>
-
-          <div className="footer-column">
-            <h4>Account</h4>
-
-            <a href="#login">Login</a>
-            <a href="#register">Create Account</a>
-            <a href="#appointments">My Appointments</a>
-            <a href="#profile">Profile</a>
-          </div>
-
-          <div className="footer-column">
-            <h4>Support</h4>
-
-            <a href="#help">Help Center</a>
-            <a href="#privacy">Privacy Policy</a>
-            <a href="#terms">Terms of Service</a>
-            <a href="#security">Security</a>
-          </div>
-
-          <div className="footer-connect">
-            <h4>Stay connected</h4>
-
-            <p>
-              Follow BookEase for product updates,
-              features, and platform news.
-            </p>
-
-            <div className="footer-socials">
-              <a href="#instagram" aria-label="Instagram">
-                IG
-              </a>
-
-              <a href="#linkedin" aria-label="LinkedIn">
-                IN
-              </a>
-
-              <a href="#twitter" aria-label="Twitter">
-                X
-              </a>
-
-              <a href="#github" aria-label="GitHub">
-                GH
-              </a>
-            </div>
-          </div>
-
         </div>
 
-        <div className="footer-bottom">
-
-          <div className="footer-copyright">
-            © 2026 BookEase. All rights reserved.
-          </div>
-
-          <div className="footer-bottom-links">
-            <a href="#privacy">Privacy</a>
-            <span></span>
-            <a href="#terms">Terms</a>
-            <span></span>
-            <a href="#security">Security</a>
-          </div>
-
-          <div className="footer-made">
-            Designed for better time management.
-          </div>
-
+        <div className="footer-column">
+          <h3>Platform</h3>
+          <Link to="/services">Services</Link>
+          <a href="/#how-it-works">How It Works</a>
+          <a href="/#about">About BookEase</a>
+          <a href="/#contact">Contact</a>
         </div>
+
+        <div className="footer-column">
+          <h3>Account</h3>
+          <Link to="/login">Login</Link>
+          <Link to="/register">Create Account</Link>
+          <Link to="/appointments">My Appointments</Link>
+          <Link to="/profile">Profile</Link>
+        </div>
+
+        <div className="footer-column">
+          <h3>Support</h3>
+          <a href="/#contact">Help Center</a>
+          <a href="/#privacy">Privacy Policy</a>
+          <a href="/#terms">Terms of Service</a>
+          <a href="/#security">Security</a>
+        </div>
+
+        <div className="footer-column footer-social">
+          <h3>Stay connected</h3>
+          <p>
+            Follow BookEase for product updates,
+            <br />
+            features, and platform news.
+          </p>
+
+          <div className="footer-social-links">
+            <a href="https://www.instagram.com/" target="_blank" rel="noreferrer" aria-label="Instagram">IG</a>
+            <a href="https://www.linkedin.com/" target="_blank" rel="noreferrer" aria-label="LinkedIn">IN</a>
+            <a href="https://x.com/" target="_blank" rel="noreferrer" aria-label="X">X</a>
+            <a href="https://github.com/" target="_blank" rel="noreferrer" aria-label="GitHub">GH</a>
+          </div>
+        </div>
+      </div>
+
+      <div className="footer-bottom">
+        <p>© {new Date().getFullYear()} BookEase. All rights reserved.</p>
+
+        <div className="footer-legal-links">
+          <a href="/#privacy">Privacy</a>
+          <span>·</span>
+          <a href="/#terms">Terms</a>
+          <span>·</span>
+          <a href="/#security">Security</a>
+        </div>
+
+        <p className="footer-tagline">
+          Designed for better time management.
+        </p>
       </div>
     </footer>
   );

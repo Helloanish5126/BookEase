@@ -1,0 +1,350 @@
+
+.profile-page {
+  min-height: 65vh;
+  padding-top: 145px;
+  padding-bottom: 80px;
+  box-sizing: border-box;
+}
+
+.profile-header {
+  margin-bottom: 30px;
+}
+
+.profile-eyebrow {
+  margin: 0 0 10px;
+  color: #c084fc;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.profile-header h1 {
+  margin: 0 0 12px;
+  color: #fff;
+  font-size: clamp(30px, 4vw, 42px);
+}
+
+.profile-header > p:last-child {
+  color: #a1a1aa;
+  line-height: 1.7;
+}
+
+.profile-card {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 48px;
+  padding: 30px;
+  border: 1px solid rgba(168, 85, 247, 0.25);
+  border-radius: 20px;
+  background: rgba(12, 12, 20, 0.85);
+}
+
+.profile-avatar {
+  width: 76px;
+  height: 76px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(216, 180, 254, 0.35);
+  border-radius: 50%;
+  background: linear-gradient(135deg, #7c3aed, #a855f7);
+  color: #fff;
+  font-size: 30px;
+  font-weight: 700;
+  box-shadow: 0 0 28px rgba(168, 85, 247, 0.18);
+}
+
+.profile-details h2 {
+  margin: 0 0 12px;
+  color: #fff;
+  font-size: 24px;
+}
+
+.profile-details p {
+  margin: 7px 0;
+  color: #a1a1aa;
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+
+.orders-section {
+  margin-top: 20px;
+}
+
+.orders-section > div:first-child h2 {
+  margin: 0 0 10px;
+  color: #fff;
+  font-size: 28px;
+}
+
+.orders-section > div:first-child > p:last-child {
+  color: #a1a1aa;
+  line-height: 1.6;
+}
+
+.orders-placeholder {
+  min-height: 220px;
+  margin-top: 28px;
+  padding: 40px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  background: rgba(12, 12, 20, 0.5);
+  text-align: center;
+}
+
+.orders-icon {
+  width: 58px;
+  height: 58px;
+  margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+  background: rgba(168, 85, 247, 0.12);
+  color: #c084fc;
+  font-size: 28px;
+}
+
+.orders-placeholder h3 {
+  margin: 0 0 10px;
+  color: #fff;
+  font-size: 19px;
+}
+
+.orders-placeholder p {
+  max-width: 500px;
+  margin: 0;
+  color: #a1a1aa;
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+/* My Orders: upcoming and past appointments */
+
+.orders-list {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  margin-top: 28px;
+}
+
+.orders-group {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.orders-group-heading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.orders-group-heading h3 {
+  margin: 0;
+  color: #f4f4f5;
+  font-size: 19px;
+}
+
+.orders-group-heading > span {
+  min-width: 26px;
+  height: 26px;
+  padding: 0 5px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  border: 1px solid rgba(168, 85, 247, 0.2);
+  border-radius: 20px;
+  background: rgba(168, 85, 247, 0.12);
+  color: #d8b4fe;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.order-card {
+  padding: 24px;
+  border: 1px solid rgba(168, 85, 247, 0.2);
+  border-radius: 16px;
+  background: rgba(12, 12, 20, 0.78);
+  transition: border-color 180ms ease, transform 180ms ease;
+}
+
+.order-card:hover {
+  border-color: rgba(168, 85, 247, 0.45);
+  transform: translateY(-2px);
+}
+
+.order-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.order-card-top h3 {
+  margin: 0 0 8px;
+  color: #fff;
+  font-size: 18px;
+}
+
+.order-date {
+  margin: 0;
+  color: #a1a1aa;
+  font-size: 13px;
+}
+
+.order-status {
+  flex-shrink: 0;
+  padding: 7px 11px;
+  border: 1px solid rgba(251, 191, 36, 0.25);
+  border-radius: 20px;
+  background: rgba(251, 191, 36, 0.08);
+  color: #fbbf24;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.order-status.confirmed,
+.order-status.completed {
+  border-color: rgba(52, 211, 153, 0.25);
+  background: rgba(52, 211, 153, 0.08);
+  color: #34d399;
+}
+
+.order-status.cancelled {
+  border-color: rgba(248, 113, 113, 0.25);
+  background: rgba(248, 113, 113, 0.08);
+  color: #fca5a5;
+}
+
+.order-card-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 28px;
+  margin-top: 20px;
+  padding-top: 17px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.order-card-details p {
+  margin: 0;
+  color: #a1a1aa;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.order-card-details strong {
+  color: #e4e4e7;
+  font-weight: 600;
+}
+
+.orders-empty-text {
+  margin: 0;
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  color: #a1a1aa;
+  font-size: 14px;
+}
+
+.orders-browse-link {
+  display: inline-block;
+  margin-top: 16px;
+  color: #c084fc;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.orders-browse-link:hover {
+  color: #e9d5ff;
+}
+
+/* Responsive layout */
+
+@media (max-width: 760px) {
+  .profile-page {
+    padding-top: 125px;
+  }
+
+  .profile-card {
+    gap: 18px;
+    padding: 22px;
+  }
+
+  .profile-avatar {
+    width: 62px;
+    height: 62px;
+    font-size: 25px;
+  }
+
+  .profile-details h2 {
+    font-size: 21px;
+  }
+
+  .order-card {
+    padding: 20px;
+  }
+
+  .order-card-details {
+    gap: 10px 20px;
+  }
+}
+
+@media (max-width: 520px) {
+  .profile-page {
+    padding-top: 115px;
+    padding-bottom: 55px;
+  }
+
+  .profile-card {
+    align-items: flex-start;
+    padding: 18px;
+  }
+
+  .profile-avatar {
+    width: 50px;
+    height: 50px;
+    font-size: 22px;
+  }
+
+  .profile-details h2 {
+    font-size: 18px;
+  }
+
+  .profile-details p {
+    font-size: 12px;
+  }
+
+  .orders-section > div:first-child h2 {
+    font-size: 25px;
+  }
+
+  .orders-placeholder {
+    padding: 30px 18px;
+  }
+
+  .order-card {
+    padding: 17px;
+  }
+
+  .order-card-top {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .order-card-details {
+    flex-direction: column;
+    gap: 10px;
+  }
+}

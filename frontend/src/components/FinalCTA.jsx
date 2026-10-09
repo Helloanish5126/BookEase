@@ -1,6 +1,10 @@
+
+import { useNavigate } from "react-router-dom";
 import "./FinalCTA.css";
 
 function FinalCTA() {
+  const navigate = useNavigate();
+
   return (
     <section className="final-cta-section">
       <div className="final-cta-glow final-cta-glow-one"></div>
@@ -15,7 +19,7 @@ function FinalCTA() {
               YOUR TIME. YOUR CHOICE.
             </span>
 
-            <h2>
+            <h2 className="final-cta-title">
               Ready to take control
               <br />
               <span>of your time?</span>
@@ -27,12 +31,18 @@ function FinalCTA() {
             </p>
 
             <div className="final-cta-actions">
-              <button className="final-cta-primary">
+              <button
+                className="final-cta-primary"
+                onClick={() => navigate("/services")}
+              >
                 Book an Appointment
                 <span>→</span>
               </button>
 
-              <button className="final-cta-secondary">
+              <button
+                className="final-cta-secondary"
+                onClick={() => navigate("/services")}
+              >
                 Explore Services
               </button>
             </div>
@@ -44,9 +54,11 @@ function FinalCTA() {
             <div className="cta-orbit cta-orbit-three"></div>
 
             <div className="cta-center">
-              <div className="cta-logo">B</div>
-              <span>BOOKEASE</span>
-              <small>SMART BOOKING</small>
+              <img
+                src="/bookease-logo.png"
+                alt="BookEase logo"
+                className="final-cta-logo"
+              />
             </div>
 
             <div className="cta-floating-card cta-card-top">

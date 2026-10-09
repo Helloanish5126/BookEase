@@ -1,19 +1,13 @@
+
+/* =========================================
+   BOOKEASE FINAL CTA SECTION
+   ========================================= */
+
 .final-cta-section {
   position: relative;
   padding: 120px 0;
   overflow: hidden;
-  background:
-    radial-gradient(
-      circle at 20% 50%,
-      rgba(139, 92, 246, 0.10),
-      transparent 32%
-    ),
-    radial-gradient(
-      circle at 80% 50%,
-      rgba(16, 185, 129, 0.08),
-      transparent 30%
-    ),
-    #030305;
+  background: transparent;
 }
 
 .final-cta-glow {
@@ -28,13 +22,13 @@
 .final-cta-glow-one {
   top: 10%;
   left: -180px;
-  background: rgba(124, 58, 237, 0.14);
+  background: rgba(124, 58, 237, 0.12);
 }
 
 .final-cta-glow-two {
   right: -180px;
   bottom: 0;
-  background: rgba(16, 185, 129, 0.10);
+  background: rgba(16, 185, 129, 0.08);
 }
 
 .final-cta-grid {
@@ -52,7 +46,12 @@
     black 80%,
     transparent
   );
+  pointer-events: none;
 }
+
+/* =========================================
+   MAIN CTA CARD
+   ========================================= */
 
 .final-cta-card {
   position: relative;
@@ -67,16 +66,12 @@
   background:
     radial-gradient(
       circle at 80% 50%,
-      rgba(139, 92, 246, 0.12),
-      transparent 30%
+      rgba(139, 92, 246, 0.08),
+      transparent 40%
     ),
-    linear-gradient(
-      135deg,
-      rgba(255, 255, 255, 0.055),
-      rgba(255, 255, 255, 0.018)
-    );
+    rgba(3, 3, 5, 0.25);
   box-shadow:
-    0 30px 100px rgba(0, 0, 0, 0.5),
+    0 30px 100px rgba(0, 0, 0, 0.25),
     inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
@@ -88,9 +83,9 @@
   padding: 1px;
   background: linear-gradient(
     135deg,
-    rgba(139, 92, 246, 0.35),
+    rgba(139, 92, 246, 0.3),
     transparent 35%,
-    rgba(16, 185, 129, 0.18)
+    rgba(16, 185, 129, 0.15)
   );
   mask:
     linear-gradient(#000 0 0) content-box,
@@ -108,20 +103,25 @@
 .final-cta-eyebrow {
   display: inline-block;
   margin-bottom: 20px;
+  font-family: "Orbitron", sans-serif;
   font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.2em;
+  font-weight: 700;
+  letter-spacing: 0.16em;
   color: var(--purple-light);
 }
 
 .final-cta-content h2 {
   margin-bottom: 24px;
-  font-size: clamp(42px, 5vw, 68px);
+  font-family: "Orbitron", sans-serif;
+  font-size: clamp(36px, 4.5vw, 58px);
+  font-weight: 700;
   letter-spacing: -0.045em;
-  line-height: 1.02;
+  line-height: 1.12;
+  color: #ffffff;
 }
 
 .final-cta-content h2 span {
+  font-family: "Orbitron", sans-serif;
   background: linear-gradient(
     90deg,
     var(--purple-light),
@@ -140,6 +140,10 @@
   font-size: 16px;
   line-height: 1.8;
 }
+
+/* =========================================
+   CTA BUTTONS
+   ========================================= */
 
 .final-cta-actions {
   display: flex;
@@ -203,7 +207,9 @@
   box-shadow: var(--purple-glow);
 }
 
-/* Visual */
+/* =========================================
+   ORBIT VISUAL
+   ========================================= */
 
 .final-cta-visual {
   position: relative;
@@ -219,6 +225,7 @@
   border: 1px solid rgba(139, 92, 246, 0.18);
   border-radius: 50%;
   transform: translate(-50%, -50%);
+  pointer-events: none;
 }
 
 .cta-orbit-one {
@@ -241,61 +248,46 @@
   animation: ctaRotate 32s linear infinite;
 }
 
+/* =========================================
+   CENTER LOGO - TRANSPARENT
+   ========================================= */
+
 .cta-center {
   position: absolute;
   top: 50%;
   left: 50%;
+  z-index: 2;
   width: 145px;
   height: 145px;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
   transform: translate(-50%, -50%);
-  border: 1px solid rgba(139, 92, 246, 0.3);
-  border-radius: 50%;
-  background:
-    radial-gradient(
-      circle at 35% 25%,
-      rgba(168, 85, 247, 0.2),
-      transparent 50%
-    ),
-    rgba(5, 5, 10, 0.92);
-  box-shadow:
-    0 0 45px rgba(139, 92, 246, 0.22),
-    inset 0 0 35px rgba(139, 92, 246, 0.08);
 }
 
-.cta-logo {
-  width: 42px;
-  height: 42px;
-  display: grid;
-  place-items: center;
-  margin-bottom: 8px;
-  border: 1px solid rgba(192, 132, 252, 0.45);
-  border-radius: 12px;
-  color: white;
-  background: linear-gradient(135deg, #7c3aed, #a855f7);
-  font-family: "Space Grotesk", sans-serif;
-  font-size: 22px;
-  font-weight: 700;
-  box-shadow: var(--purple-glow);
+.final-cta-logo {
+  display: block;
+  width: 82px;
+  height: 82px;
+  margin: 0;
+  object-fit: contain;
+  background: transparent;
+  filter: drop-shadow(0 0 18px rgba(139, 92, 246, 0.5));
+  transition: filter 250ms ease, transform 250ms ease;
 }
 
-.cta-center > span {
-  color: white;
-  font-family: "Space Grotesk", sans-serif;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
+.final-cta-logo:hover {
+  filter: drop-shadow(0 0 28px rgba(168, 85, 247, 0.75));
+  transform: scale(1.04);
 }
 
-.cta-center small {
-  margin-top: 5px;
-  color: var(--text-muted);
-  font-size: 8px;
-  letter-spacing: 0.16em;
-}
+/* =========================================
+   FLOATING BOOKING CARDS
+   ========================================= */
 
 .cta-floating-card {
   position: absolute;
@@ -359,6 +351,10 @@
   font-size: 9px;
 }
 
+/* =========================================
+   ANIMATIONS
+   ========================================= */
+
 @keyframes ctaRotate {
   from {
     transform: translate(-50%, -50%) rotate(0deg);
@@ -379,7 +375,9 @@
   }
 }
 
-/* Tablet */
+/* =========================================
+   TABLET RESPONSIVE
+   ========================================= */
 
 @media (max-width: 1000px) {
   .final-cta-card {
@@ -407,7 +405,9 @@
   }
 }
 
-/* Mobile */
+/* =========================================
+   MOBILE RESPONSIVE
+   ========================================= */
 
 @media (max-width: 600px) {
   .final-cta-section {
@@ -421,7 +421,7 @@
   }
 
   .final-cta-content h2 {
-    font-size: 39px;
+    font-size: clamp(30px, 8vw, 39px);
   }
 
   .final-cta-content p {
@@ -444,6 +444,16 @@
     transform: scale(0.85);
     margin-top: 10px;
     margin-bottom: -20px;
+  }
+
+  .cta-center {
+    width: 125px;
+    height: 125px;
+  }
+
+  .final-cta-logo {
+    width: 72px;
+    height: 72px;
   }
 
   .cta-card-top {

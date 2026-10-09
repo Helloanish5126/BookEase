@@ -1,3 +1,4 @@
+
 import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import "./Booking.css";
@@ -9,77 +10,45 @@ const services = [
     icon: "✂",
     category: "Beauty",
     name: "Premium Haircut",
-    description:
-      "Professional styling with a personalized consultation and premium grooming experience.",
+    description: "Professional styling with a personalized consultation.",
     price: 450,
     duration: 45,
   },
   {
     id: 2,
-    backendId: 2,
+    backendId: 3,
     icon: "✦",
     category: "Wellness",
     name: "Deep Relaxation Spa",
-    description:
-      "A calming wellness session designed to help you reset, recharge, and feel your best.",
+    description: "A calming wellness session to help you recharge.",
     price: 800,
     duration: 60,
   },
   {
     id: 3,
-    backendId: 2,
+    backendId: 4,
     icon: "◇",
     category: "Healthcare",
     name: "Dental Consultation",
-    description:
-      "Connect with qualified professionals for routine dental consultation and care.",
+    description: "Professional dental consultation and care.",
     price: 600,
     duration: 30,
   },
 ];
 
-const demoSlots = [
-  {
-    id: 2,
-    startTime: "11:00",
-    endTime: "11:45",
-    available: true,
-  },
-  {
-    id: 4,
-    startTime: "12:00",
-    endTime: "12:45",
-    available: true,
-  },
-  {
-    id: 5,
-    startTime: "13:00",
-    endTime: "13:45",
-    available: true,
-  },
-  {
-    id: 6,
-    startTime: "15:00",
-    endTime: "15:45",
-    available: true,
-  },
-  {
-    id: 7,
-    startTime: "16:00",
-    endTime: "16:45",
-    available: false,
-  },
-];
-
 function formatDate(date) {
-  return date.toISOString().split("T")[0];
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
 }
 
-function formatDisplayDate(date) {
-  return date.toLocaleDateString("en-IN", {
+function formatDisplayDate(dateString) {
+  return new Date(`${dateString}T00:00:00`).toLocaleDateString("en-IN", {
     weekday: "short",
     day: "numeric",
     month: "short",
+    year: "numeric",
   });
 }
 
@@ -88,35 +57,40 @@ function Booking() {
   const navigate = useNavigate();
 
   const service =
-    services.find(
-      (item) => item.id === Number(serviceId)
-    ) || services[0];
+    services.find((item) => item.id === Number(serviceId)) || services[0];
 
-  const [selectedDate, setSelectedDate] = useState(
-    formatDate(new Date())
-  );
-
+  const [selectedDate, setSelectedDate] = useState(formatDate(new Date()));
   const [selectedSlot, setSelectedSlot] = useState(null);
-
   const [customerName, setCustomerName] = useState("");
   const [customerEmail, setCustomerEmail] = useState("");
   const [customerPhone, setCustomerPhone] = useState("");
-
-  const [slots, setSlots] = useState(demoSlots);
+  const [slots, setSlots] = useState([]);
   const [loadingSlots, setLoadingSlots] = useState(false);
-
+  const [bookingLoading, setBookingLoading] = useState(false);
   const [bookingError, setBookingError] = useState("");
-
   const [dates, setDates] = useState([]);
+
+  useEffect(() => {
+    try {
+      const user = JSON.parse(localStorage.getItem("bookeaseUser") || "null");
+
+      if (user) {
+        setCustomerName(user.name || "");
+        setCustomerEmail(user.email || "");
+        setCustomerPhone(user.phoneNumber || user.phone || "");
+      }
+    } catch {
+      // The booking form remains usable if saved user data is invalid.
+    }
+  }, []);
 
   useEffect(() => {
     const generatedDates = [];
 
     for (let i = 0; i < 7; i++) {
       const date = new Date();
-
+      date.setHours(0, 0, 0, 0);
       date.setDate(date.getDate() + i);
-
       generatedDates.push(date);
     }
 
@@ -124,419 +98,354 @@ function Booking() {
   }, []);
 
   useEffect(() => {
+    let cancelled = false;
+
     async function loadSlots() {
       setLoadingSlots(true);
       setBookingError("");
+      setSelectedSlot(null);
+      setSlots([]);
 
       try {
         const response = await fetch(
-          `http://localhost:8080/api/timeslots/service/${service.backendId}/date/${selectedDate}`
+          `http://localhost:8080/api/time-slots/available/${service.backendId}/${selectedDate}`
         );
 
         if (!response.ok) {
-          throw new Error("Could not load slots");
+          throw new Error("Could not load available time slots.");
         }
 
         const data = await response.json();
 
-        if (Array.isArray(data) && data.length > 0) {
-          setSlots(data);
-        } else {
-          setSlots(demoSlots);
+        if (!cancelled) {
+          setSlots(
+            Array.isArray(data)
+              ? data.filter((slot) => slot.available === true)
+              : []
+          );
         }
       } catch (error) {
-        setSlots(demoSlots);
+        if (!cancelled) {
+          setSlots([]);
+          setBookingError(
+            error.message === "Failed to fetch"
+              ? "Cannot connect to the backend. Make sure Spring Boot is running."
+              : error.message
+          );
+        }
       } finally {
-        setLoadingSlots(false);
+        if (!cancelled) {
+          setLoadingSlots(false);
+        }
       }
     }
 
     loadSlots();
+
+    return () => {
+      cancelled = true;
+    };
   }, [selectedDate, service.backendId]);
 
-  const selectedSlotData = useMemo(() => {
-    return slots.find(
-      (slot) => slot.id === selectedSlot
-    );
-  }, [slots, selectedSlot]);
+  const selectedSlotData = useMemo(
+    () => slots.find((slot) => slot.id === selectedSlot),
+    [slots, selectedSlot]
+  );
 
-  const handleContinue = () => {
+  async function handleContinue(event) {
+    event.preventDefault();
     setBookingError("");
 
-    if (!customerName.trim()) {
-      setBookingError("Please enter your name.");
+    let user;
+
+    try {
+      user = JSON.parse(localStorage.getItem("bookeaseUser") || "null");
+    } catch {
+      user = null;
+    }
+
+    if (!user?.id) {
+      navigate("/login");
       return;
     }
 
-    if (!customerEmail.trim()) {
-      setBookingError("Please enter your email.");
+    if (!customerName.trim() || !customerEmail.trim() || !customerPhone.trim()) {
+      setBookingError("Please fill in your name, email, and phone number.");
       return;
     }
 
-    if (!customerPhone.trim()) {
-      setBookingError("Please enter your phone number.");
-      return;
-    }
-
-    if (!selectedSlotData) {
+    if (!selectedSlotData?.id) {
       setBookingError("Please select an available time slot.");
       return;
     }
 
-    navigate("/booking-confirmation", {
-      state: {
-        service,
-        selectedDate,
-        selectedSlot: selectedSlotData,
-        customerName,
-        customerEmail,
-        customerPhone,
-      },
-    });
-  };
+    setBookingLoading(true);
+
+    try {
+      const response = await fetch("http://localhost:8080/api/appointments", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          user: { id: user.id },
+          service: { id: service.backendId },
+          timeSlot: { id: selectedSlotData.id },
+          bookingDate: new Date().toISOString().slice(0, 19),
+          status: "PENDING",
+        }),
+      });
+
+      const data = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        throw new Error(
+          data.message ||
+            data.error ||
+            "The appointment could not be saved. Please try another slot."
+        );
+      }
+
+      navigate("/booking-confirmation", {
+        state: {
+          appointment: data,
+          service,
+          selectedDate,
+          selectedSlot: selectedSlotData,
+          customerName: customerName.trim(),
+          customerEmail: customerEmail.trim(),
+          customerPhone: customerPhone.trim(),
+        },
+      });
+    } catch (error) {
+      setBookingError(
+        error.message === "Failed to fetch"
+          ? "Cannot connect to the backend. Make sure Spring Boot is running."
+          : error.message
+      );
+    } finally {
+      setBookingLoading(false);
+    }
+  }
 
   return (
     <div className="booking-page page-enter">
-
       <div className="booking-container">
-
-        <Link
-          to={`/services/${service.id}`}
-          className="booking-back"
-        >
+        <Link to={`/services/${service.id}`} className="booking-back">
           ← Back to Service
         </Link>
 
         <div className="booking-heading">
           <span>BOOKEASE BOOKING</span>
-
           <h1>
             Book your <span>appointment.</span>
           </h1>
-
           <p>
-            Choose a date, select your preferred time,
-            and confirm your appointment in seconds.
+            Choose a date, select your preferred time, and confirm your
+            appointment.
           </p>
         </div>
 
-        <div className="booking-layout">
-
-          {/* LEFT SIDE */}
-
+        <form className="booking-layout" onSubmit={handleContinue}>
           <section className="booking-main-card">
-
             <div className="booking-section">
-
               <div className="booking-section-heading">
-                <div className="booking-step-number">
-                  01
-                </div>
-
+                <div className="booking-step-number">01</div>
                 <div>
                   <h2>Choose a date</h2>
-
-                  <p>
-                    Select the day that works best for you.
-                  </p>
+                  <p>Select the day that works best for you.</p>
                 </div>
               </div>
 
               <div className="booking-date-list">
-
                 {dates.map((date) => {
                   const value = formatDate(date);
 
                   return (
                     <button
+                      type="button"
                       key={value}
                       className={
                         selectedDate === value
                           ? "booking-date active"
                           : "booking-date"
                       }
-                      onClick={() => {
-                        setSelectedDate(value);
-                        setSelectedSlot(null);
-                      }}
+                      onClick={() => setSelectedDate(value)}
                     >
                       <span>
-                        {date.toLocaleDateString(
-                          "en-IN",
-                          { weekday: "short" }
-                        )}
+                        {date.toLocaleDateString("en-IN", {
+                          weekday: "short",
+                        })}
                       </span>
-
-                      <strong>
-                        {date.getDate()}
-                      </strong>
-
+                      <strong>{date.getDate()}</strong>
                       <small>
-                        {date.toLocaleDateString(
-                          "en-IN",
-                          { month: "short" }
-                        )}
+                        {date.toLocaleDateString("en-IN", {
+                          month: "short",
+                        })}
                       </small>
                     </button>
                   );
                 })}
-
               </div>
-
             </div>
 
-            <div className="booking-divider"></div>
+            <div className="booking-divider" />
 
             <div className="booking-section">
-
               <div className="booking-section-heading">
-                <div className="booking-step-number">
-                  02
-                </div>
-
+                <div className="booking-step-number">02</div>
                 <div>
                   <h2>Select a time</h2>
-
-                  <p>
-                    Pick an available slot for your appointment.
-                  </p>
+                  <p>Choose a real available slot from the database.</p>
                 </div>
               </div>
 
               {loadingSlots ? (
-                <div className="booking-loading">
-                  <span></span>
-                  Loading available slots...
-                </div>
+                <div className="booking-loading">Loading available slots...</div>
+              ) : slots.length === 0 ? (
+                <p>
+                  No available slots for this date. Please select another date.
+                </p>
               ) : (
                 <div className="booking-slots">
-
                   {slots.map((slot) => (
                     <button
+                      type="button"
                       key={slot.id}
-                      disabled={!slot.available}
                       className={
                         selectedSlot === slot.id
                           ? "booking-slot active"
-                          : !slot.available
-                            ? "booking-slot unavailable"
-                            : "booking-slot"
+                          : "booking-slot"
                       }
-                      onClick={() =>
-                        setSelectedSlot(slot.id)
-                      }
+                      onClick={() => setSelectedSlot(slot.id)}
                     >
-                      <span>
-                        {slot.startTime}
-                      </span>
-
-                      <small>
-                        {slot.endTime}
-                      </small>
-
-                      {!slot.available && (
-                        <em>
-                          Booked
-                        </em>
-                      )}
+                      <span>{String(slot.startTime).slice(0, 5)}</span>
+                      <small>{String(slot.endTime).slice(0, 5)}</small>
                     </button>
                   ))}
-
                 </div>
               )}
-
             </div>
 
-            <div className="booking-divider"></div>
+            <div className="booking-divider" />
 
             <div className="booking-section">
-
               <div className="booking-section-heading">
-                <div className="booking-step-number">
-                  03
-                </div>
-
+                <div className="booking-step-number">03</div>
                 <div>
                   <h2>Your details</h2>
-
-                  <p>
-                    We need these details to manage your appointment.
-                  </p>
+                  <p>Confirm your contact information.</p>
                 </div>
               </div>
 
               <div className="booking-form">
-
                 <div className="booking-input-group">
-                  <label>
-                    Full name
-                  </label>
-
+                  <label htmlFor="booking-name">Full name</label>
                   <input
+                    id="booking-name"
                     type="text"
                     placeholder="Enter your full name"
                     value={customerName}
-                    onChange={(event) =>
-                      setCustomerName(event.target.value)
-                    }
+                    onChange={(event) => setCustomerName(event.target.value)}
+                    required
                   />
                 </div>
 
                 <div className="booking-form-row">
-
                   <div className="booking-input-group">
-                    <label>
-                      Email address
-                    </label>
-
+                    <label htmlFor="booking-email">Email address</label>
                     <input
+                      id="booking-email"
                       type="email"
                       placeholder="you@example.com"
                       value={customerEmail}
-                      onChange={(event) =>
-                        setCustomerEmail(event.target.value)
-                      }
+                      onChange={(event) => setCustomerEmail(event.target.value)}
+                      required
                     />
                   </div>
 
                   <div className="booking-input-group">
-                    <label>
-                      Phone number
-                    </label>
-
+                    <label htmlFor="booking-phone">Phone number</label>
                     <input
+                      id="booking-phone"
                       type="tel"
                       placeholder="+91 XXXXX XXXXX"
                       value={customerPhone}
-                      onChange={(event) =>
-                        setCustomerPhone(event.target.value)
-                      }
+                      onChange={(event) => setCustomerPhone(event.target.value)}
+                      required
                     />
                   </div>
-
                 </div>
-
               </div>
-
             </div>
-
           </section>
 
-          {/* RIGHT SIDE */}
-
           <aside className="booking-summary">
-
             <div className="booking-summary-top">
-
-              <span>
-                BOOKING SUMMARY
-              </span>
-
+              <span>BOOKING SUMMARY</span>
               <div className="booking-summary-live">
-                <i></i>
+                <i />
                 Live
               </div>
-
             </div>
 
             <div className="booking-service-preview">
-
-              <div className="booking-service-icon">
-                {service.icon}
-              </div>
-
+              <div className="booking-service-icon">{service.icon}</div>
               <div>
-                <small>
-                  {service.category}
-                </small>
-
-                <h2>
-                  {service.name}
-                </h2>
+                <small>{service.category}</small>
+                <h2>{service.name}</h2>
               </div>
-
             </div>
 
-            <div className="booking-summary-divider"></div>
+            <div className="booking-summary-divider" />
 
             <div className="booking-summary-row">
-
-              <span>
-                Date
-              </span>
-
-              <strong>
-                {formatDisplayDate(
-                  new Date(`${selectedDate}T00:00:00`)
-                )}
-              </strong>
-
+              <span>Date</span>
+              <strong>{formatDisplayDate(selectedDate)}</strong>
             </div>
 
             <div className="booking-summary-row">
-
-              <span>
-                Time
-              </span>
-
+              <span>Time</span>
               <strong>
                 {selectedSlotData
-                  ? `${selectedSlotData.startTime} – ${selectedSlotData.endTime}`
+                  ? `${String(selectedSlotData.startTime).slice(0, 5)} – ${String(selectedSlotData.endTime).slice(0, 5)}`
                   : "Select a time"}
               </strong>
-
             </div>
 
             <div className="booking-summary-row">
-
-              <span>
-                Duration
-              </span>
-
-              <strong>
-                {service.duration} minutes
-              </strong>
-
+              <span>Duration</span>
+              <strong>{service.duration} minutes</strong>
             </div>
 
-            <div className="booking-summary-divider"></div>
+            <div className="booking-summary-divider" />
 
             <div className="booking-total">
-
-              <span>
-                Total
-              </span>
-
-              <strong>
-                ₹{service.price}
-              </strong>
-
+              <span>Total</span>
+              <strong>₹{service.price}</strong>
             </div>
 
             {bookingError && (
-              <div className="booking-error">
+              <div className="booking-error" role="alert">
                 {bookingError}
               </div>
             )}
 
             <button
+              type="submit"
               className="booking-continue"
-              onClick={handleContinue}
+              disabled={bookingLoading || loadingSlots || !selectedSlotData}
             >
-              Continue to Confirmation
+              {bookingLoading ? "Saving Booking..." : "Confirm Booking"}
               <span>→</span>
             </button>
 
             <p className="booking-secure">
-              Your booking information is securely handled.
+              Your appointment is confirmed only after it is saved successfully.
             </p>
-
           </aside>
-
-        </div>
-
+        </form>
       </div>
-
     </div>
   );
 }
