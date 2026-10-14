@@ -1,11 +1,9 @@
-
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./Register.css";
 
 const API_BASE_URL = (
-  import.meta.env.VITE_API_BASE_URL ||
-  "http://localhost:8080"
+  import.meta.env.VITE_API_BASE_URL || ""
 ).replace(/\/+$/, "");
 
 function Register() {
@@ -31,6 +29,13 @@ function Register() {
       !password
     ) {
       setError("Please fill in all fields.");
+      return;
+    }
+
+    if (!API_BASE_URL) {
+      setError(
+        "Server configuration is missing. Please try again later."
+      );
       return;
     }
 
@@ -74,7 +79,7 @@ function Register() {
       setError(
         err.message === "Failed to fetch"
           ? "Cannot connect to BookEase. Please try again later."
-          : err.message
+          : err.message || "Registration failed. Please try again."
       );
     } finally {
       setLoading(false);
@@ -96,66 +101,50 @@ function Register() {
           className="register-form"
           onSubmit={handleRegister}
         >
-          <label htmlFor="register-name">
-            Full Name
-          </label>
+          <label htmlFor="register-name">Full Name</label>
 
           <input
             id="register-name"
             type="text"
             placeholder="Enter your full name"
             value={name}
-            onChange={(event) =>
-              setName(event.target.value)
-            }
+            onChange={(event) => setName(event.target.value)}
             autoComplete="name"
             required
           />
 
-          <label htmlFor="register-email">
-            Email Address
-          </label>
+          <label htmlFor="register-email">Email Address</label>
 
           <input
             id="register-email"
             type="email"
             placeholder="Enter your email"
             value={email}
-            onChange={(event) =>
-              setEmail(event.target.value)
-            }
+            onChange={(event) => setEmail(event.target.value)}
             autoComplete="email"
             required
           />
 
-          <label htmlFor="register-phone">
-            Phone Number
-          </label>
+          <label htmlFor="register-phone">Phone Number</label>
 
           <input
             id="register-phone"
             type="tel"
             placeholder="Enter your phone number"
             value={phoneNumber}
-            onChange={(event) =>
-              setPhoneNumber(event.target.value)
-            }
+            onChange={(event) => setPhoneNumber(event.target.value)}
             autoComplete="tel"
             required
           />
 
-          <label htmlFor="register-password">
-            Password
-          </label>
+          <label htmlFor="register-password">Password</label>
 
           <input
             id="register-password"
             type="password"
             placeholder="Create a password"
             value={password}
-            onChange={(event) =>
-              setPassword(event.target.value)
-            }
+            onChange={(event) => setPassword(event.target.value)}
             autoComplete="new-password"
             required
           />
@@ -183,9 +172,7 @@ function Register() {
             className="register-button"
             disabled={loading}
           >
-            {loading
-              ? "Creating Account..."
-              : "Create Account"}
+            {loading ? "Creating Account..." : "Create Account"}
           </button>
         </form>
 

@@ -1,11 +1,9 @@
-
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "./Profile.css";
 
 const API_BASE_URL = (
-  import.meta.env.VITE_API_BASE_URL ||
-  "http://localhost:8080"
+  import.meta.env.VITE_API_BASE_URL || ""
 ).replace(/\/+$/, "");
 
 function formatDate(value) {
@@ -79,6 +77,15 @@ function Profile() {
         return;
       }
 
+      if (!API_BASE_URL) {
+        setAppointments([]);
+        setError(
+          "Server configuration is missing. Please try again later."
+        );
+        setLoading(false);
+        return;
+      }
+
       try {
         setLoading(true);
         setError("");
@@ -87,25 +94,25 @@ function Profile() {
           `${API_BASE_URL}/api/appointments/user/${savedUser.id}`
         );
 
+        const data = await response.json().catch(() => null);
+
         if (!response.ok) {
           throw new Error(
-            "Could not load your appointments."
+            data?.message ||
+              data?.error ||
+              "Could not load your appointments."
           );
         }
 
-        const data = await response.json();
-
         if (!cancelled) {
-          setAppointments(
-            Array.isArray(data) ? data : []
-          );
+          setAppointments(Array.isArray(data) ? data : []);
         }
       } catch (err) {
         if (!cancelled) {
           setError(
             err.message === "Failed to fetch"
               ? "Cannot connect to BookEase. Please try again later."
-              : err.message
+              : err.message || "Could not load your appointments."
           );
         }
       } finally {
@@ -136,10 +143,13 @@ function Profile() {
 
     if (!dateValue) return true;
 
+    const appointmentDate = new Date(
+      `${String(dateValue).slice(0, 10)}T00:00:00`
+    );
+
     return (
-      new Date(
-        `${String(dateValue).slice(0, 10)}T00:00:00`
-      ) >= today
+      !Number.isNaN(appointmentDate.getTime()) &&
+      appointmentDate >= today
     );
   });
 
@@ -154,10 +164,13 @@ function Profile() {
 
     if (!dateValue) return false;
 
+    const appointmentDate = new Date(
+      `${String(dateValue).slice(0, 10)}T00:00:00`
+    );
+
     return (
-      new Date(
-        `${String(dateValue).slice(0, 10)}T00:00:00`
-      ) < today
+      !Number.isNaN(appointmentDate.getTime()) &&
+      appointmentDate < today
     );
   });
 
@@ -193,8 +206,7 @@ function Profile() {
         <div className="order-card-details">
           <p>
             <strong>Time:</strong>{" "}
-            {formatTime(slot.startTime) ||
-              "Time unavailable"}
+            {formatTime(slot.startTime) || "Time unavailable"}
             {slot.endTime
               ? ` – ${formatTime(slot.endTime)}`
               : ""}
