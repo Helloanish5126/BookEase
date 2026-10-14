@@ -1,11 +1,9 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
 
 const API_BASE_URL = (
-  import.meta.env.VITE_API_BASE_URL ||
-  "http://localhost:8080"
+  import.meta.env.VITE_API_BASE_URL || ""
 ).replace(/\/+$/, "");
 
 function Login() {
@@ -21,6 +19,12 @@ function Login() {
     event.preventDefault();
     setError("");
     setSuccess("");
+
+    if (!API_BASE_URL) {
+      setError("Server configuration is missing. Please try again later.");
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -39,9 +43,7 @@ function Login() {
 
       if (!response.ok) {
         throw new Error(
-          data.message ||
-            data.error ||
-            "Invalid email or password."
+          data.message || data.error || "Invalid email or password."
         );
       }
 
@@ -53,23 +55,18 @@ function Login() {
         role: data.role,
       };
 
-      localStorage.setItem(
-        "bookeaseUser",
-        JSON.stringify(user)
-      );
+      localStorage.setItem("bookeaseUser", JSON.stringify(user));
 
-      window.dispatchEvent(
-        new Event("bookease-auth-change")
-      );
+      window.dispatchEvent(new Event("bookease-auth-change"));
 
-      setSuccess(`Welcome back, ${data.name}!`);
+      setSuccess(`Welcome back, ${data.name || "User"}!`);
 
       navigate("/", { replace: true });
     } catch (err) {
       setError(
         err.message === "Failed to fetch"
-          ? "Cannot connect to BookEase. Please check your internet connection or try again later."
-          : err.message
+          ? "Cannot connect to BookEase. Please check the server connection and try again."
+          : err.message || "Login failed. Please try again."
       );
     } finally {
       setLoading(false);
@@ -85,60 +82,41 @@ function Login() {
           Sign in to manage your BookEase appointments.
         </p>
 
-        <form
-          className="login-form"
-          onSubmit={handleLogin}
-        >
+        <form className="login-form" onSubmit={handleLogin}>
           <div className="login-field">
-            <label htmlFor="login-email">
-              Email address
-            </label>
-
+            <label htmlFor="login-email">Email address</label>
             <input
               id="login-email"
               type="email"
               placeholder="Enter your email"
               value={email}
-              onChange={(event) =>
-                setEmail(event.target.value)
-              }
+              onChange={(event) => setEmail(event.target.value)}
               autoComplete="email"
               required
             />
           </div>
 
           <div className="login-field">
-            <label htmlFor="login-password">
-              Password
-            </label>
-
+            <label htmlFor="login-password">Password</label>
             <input
               id="login-password"
               type="password"
               placeholder="Enter your password"
               value={password}
-              onChange={(event) =>
-                setPassword(event.target.value)
-              }
+              onChange={(event) => setPassword(event.target.value)}
               autoComplete="current-password"
               required
             />
           </div>
 
           {error && (
-            <p
-              className="login-message login-error"
-              role="alert"
-            >
+            <p className="login-message login-error" role="alert">
               {error}
             </p>
           )}
 
           {success && (
-            <p
-              className="login-message login-success"
-              role="status"
-            >
+            <p className="login-message login-success" role="status">
               {success}
             </p>
           )}

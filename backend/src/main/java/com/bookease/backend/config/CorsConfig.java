@@ -1,4 +1,3 @@
-
 package com.bookease.backend.config;
 
 import org.springframework.context.annotation.Bean;
@@ -15,7 +14,10 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/api/**")
-                        .allowedOrigins("http://localhost:5173")
+                        .allowedOrigins(
+                                "http://localhost:5173",
+                                "https://book-ease-dusky.vercel.app"
+                        )
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*");
             }
