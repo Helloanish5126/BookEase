@@ -36,12 +36,46 @@ const services = [
     price: 600,
     duration: 30,
   },
+  {
+    id: 4,
+    backendId: 5,
+    icon: "◇",
+    category: "Fitness",
+    name: "Personal Training",
+    description:
+      "One-on-one fitness guidance tailored around your goals, schedule, and experience.",
+    price: 700,
+    duration: 60,
+  },
+  {
+    id: 5,
+    backendId: 6,
+    icon: "◉",
+    category: "Healthcare",
+    name: "Eye Checkup",
+    description:
+      "Comprehensive vision screening and professional eye health consultation.",
+    price: 500,
+    duration: 30,
+  },
+  {
+    id: 6,
+    backendId: 7,
+    icon: "+",
+    category: "Healthcare",
+    name: "Physiotherapy",
+    description:
+      "Personalized physical therapy sessions focused on recovery, mobility, and strength.",
+    price: 750,
+    duration: 45,
+  },
 ];
 
 function formatDate(date) {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, "0");
   const day = String(date.getDate()).padStart(2, "0");
+
   return `${year}-${month}-${day}`;
 }
 
@@ -58,14 +92,17 @@ function Booking() {
   const { serviceId } = useParams();
   const navigate = useNavigate();
 
-  const service =
-    services.find((item) => item.id === Number(serviceId)) || services[0];
+  const service = services.find(
+    (item) => item.id === Number(serviceId)
+  );
 
   const [selectedDate, setSelectedDate] = useState(formatDate(new Date()));
   const [selectedSlot, setSelectedSlot] = useState(null);
+
   const [customerName, setCustomerName] = useState("");
   const [customerEmail, setCustomerEmail] = useState("");
   const [customerPhone, setCustomerPhone] = useState("");
+
   const [slots, setSlots] = useState([]);
   const [loadingSlots, setLoadingSlots] = useState(false);
   const [bookingLoading, setBookingLoading] = useState(false);
@@ -74,7 +111,9 @@ function Booking() {
 
   useEffect(() => {
     try {
-      const user = JSON.parse(localStorage.getItem("bookeaseUser") || "null");
+      const user = JSON.parse(
+        localStorage.getItem("bookeaseUser") || "null"
+      );
 
       if (user) {
         setCustomerName(user.name || "");
@@ -103,6 +142,12 @@ function Booking() {
     let cancelled = false;
 
     async function loadSlots() {
+      if (!service) {
+        setSlots([]);
+        setBookingError("Service not found. Please return to Services.");
+        return;
+      }
+
       setLoadingSlots(true);
       setBookingError("");
       setSelectedSlot(null);
@@ -122,7 +167,11 @@ function Booking() {
         if (!cancelled) {
           setSlots(
             Array.isArray(data)
-              ? data.filter((slot) => slot.available === true)
+              ? data.filter(
+                  (slot) =>
+                    slot.available === true &&
+                    Number(slot.service?.id) === service.backendId
+                )
               : []
           );
         }
@@ -147,7 +196,7 @@ function Booking() {
     return () => {
       cancelled = true;
     };
-  }, [selectedDate, service.backendId]);
+  }, [selectedDate, service]);
 
   const selectedSlotData = useMemo(
     () => slots.find((slot) => slot.id === selectedSlot),
@@ -157,6 +206,11 @@ function Booking() {
   async function handleContinue(event) {
     event.preventDefault();
     setBookingError("");
+
+    if (!service) {
+      setBookingError("Service not found. Please select a valid service.");
+      return;
+    }
 
     let user;
 
@@ -182,6 +236,14 @@ function Booking() {
 
     if (!selectedSlotData?.id) {
       setBookingError("Please select an available time slot.");
+      return;
+    }
+
+    // Make sure the selected slot belongs to the selected service.
+    if (Number(selectedSlotData.service?.id) !== service.backendId) {
+      setBookingError(
+        "The selected slot does not belong to this service. Please select another slot."
+      );
       return;
     }
 
@@ -232,6 +294,20 @@ function Booking() {
     } finally {
       setBookingLoading(false);
     }
+  }
+
+  if (!service) {
+    return (
+      <div className="booking-page page-enter">
+        <div className="booking-container">
+          <h1>Service not found</h1>
+          <p>Please select a valid service from the Services page.</p>
+          <Link to="/services" className="booking-back">
+            ← Back to Services
+          </Link>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -442,7 +518,9 @@ function Booking() {
             <button
               type="submit"
               className="booking-continue"
-              disabled={bookingLoading || loadingSlots || !selectedSlotData}
+              disabled={
+                bookingLoading || loadingSlots || !selectedSlotData
+              }
             >
               {bookingLoading ? "Saving Booking..." : "Confirm Booking"}
               <span>→</span>
