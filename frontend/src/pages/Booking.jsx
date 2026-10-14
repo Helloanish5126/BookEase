@@ -3,6 +3,8 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import "./Booking.css";
 
+const API_BASE_URL = "https://bookease-production-377d.up.railway.app";
+
 const services = [
   {
     id: 1,
@@ -108,7 +110,7 @@ function Booking() {
 
       try {
         const response = await fetch(
-          `http://localhost:8080/api/time-slots/available/${service.backendId}/${selectedDate}`
+          `${API_BASE_URL}/api/time-slots/available/${service.backendId}/${selectedDate}`
         );
 
         if (!response.ok) {
@@ -129,7 +131,7 @@ function Booking() {
           setSlots([]);
           setBookingError(
             error.message === "Failed to fetch"
-              ? "Cannot connect to the backend. Make sure Spring Boot is running."
+              ? "Cannot connect to the backend. Please check your internet connection and backend deployment."
               : error.message
           );
         }
@@ -169,7 +171,11 @@ function Booking() {
       return;
     }
 
-    if (!customerName.trim() || !customerEmail.trim() || !customerPhone.trim()) {
+    if (
+      !customerName.trim() ||
+      !customerEmail.trim() ||
+      !customerPhone.trim()
+    ) {
       setBookingError("Please fill in your name, email, and phone number.");
       return;
     }
@@ -182,7 +188,7 @@ function Booking() {
     setBookingLoading(true);
 
     try {
-      const response = await fetch("http://localhost:8080/api/appointments", {
+      const response = await fetch(`${API_BASE_URL}/api/appointments`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -220,7 +226,7 @@ function Booking() {
     } catch (error) {
       setBookingError(
         error.message === "Failed to fetch"
-          ? "Cannot connect to the backend. Make sure Spring Boot is running."
+          ? "Cannot connect to the backend. Please check your internet connection and backend deployment."
           : error.message
       );
     } finally {
@@ -301,7 +307,9 @@ function Booking() {
               </div>
 
               {loadingSlots ? (
-                <div className="booking-loading">Loading available slots...</div>
+                <div className="booking-loading">
+                  Loading available slots...
+                </div>
               ) : slots.length === 0 ? (
                 <p>
                   No available slots for this date. Please select another date.

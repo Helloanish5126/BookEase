@@ -3,6 +3,11 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
 
+const API_BASE_URL = (
+  import.meta.env.VITE_API_BASE_URL ||
+  "http://localhost:8080"
+).replace(/\/+$/, "");
+
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -20,19 +25,23 @@ function Login() {
 
     try {
       const response = await fetch(
-        "http://localhost:8080/api/users/login",
+        `${API_BASE_URL}/api/users/login`,
         {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+          },
           body: JSON.stringify({ email, password }),
         }
       );
 
-      const data = await response.json();
+      const data = await response.json().catch(() => ({}));
 
       if (!response.ok) {
         throw new Error(
-          data.message || data.error || "Invalid email or password."
+          data.message ||
+            data.error ||
+            "Invalid email or password."
         );
       }
 
@@ -44,20 +53,22 @@ function Login() {
         role: data.role,
       };
 
-      // Save the user so the session survives page refreshes.
-      localStorage.setItem("bookeaseUser", JSON.stringify(user));
+      localStorage.setItem(
+        "bookeaseUser",
+        JSON.stringify(user)
+      );
 
-      // Tell the navbar that the login state has changed.
-      window.dispatchEvent(new Event("bookease-auth-change"));
+      window.dispatchEvent(
+        new Event("bookease-auth-change")
+      );
 
       setSuccess(`Welcome back, ${data.name}!`);
 
-      // Redirect to the homepage after successful login.
       navigate("/", { replace: true });
     } catch (err) {
       setError(
         err.message === "Failed to fetch"
-          ? "Cannot connect to BookEase. Make sure the backend is running."
+          ? "Cannot connect to BookEase. Please check your internet connection or try again later."
           : err.message
       );
     } finally {
@@ -74,41 +85,60 @@ function Login() {
           Sign in to manage your BookEase appointments.
         </p>
 
-        <form className="login-form" onSubmit={handleLogin}>
+        <form
+          className="login-form"
+          onSubmit={handleLogin}
+        >
           <div className="login-field">
-            <label htmlFor="login-email">Email address</label>
+            <label htmlFor="login-email">
+              Email address
+            </label>
+
             <input
               id="login-email"
               type="email"
               placeholder="Enter your email"
               value={email}
-              onChange={(event) => setEmail(event.target.value)}
+              onChange={(event) =>
+                setEmail(event.target.value)
+              }
               autoComplete="email"
               required
             />
           </div>
 
           <div className="login-field">
-            <label htmlFor="login-password">Password</label>
+            <label htmlFor="login-password">
+              Password
+            </label>
+
             <input
               id="login-password"
               type="password"
               placeholder="Enter your password"
               value={password}
-              onChange={(event) => setPassword(event.target.value)}
+              onChange={(event) =>
+                setPassword(event.target.value)
+              }
               autoComplete="current-password"
               required
             />
           </div>
 
           {error && (
-            <p className="login-message login-error" role="alert">
+            <p
+              className="login-message login-error"
+              role="alert"
+            >
               {error}
             </p>
           )}
 
           {success && (
-            <p className="login-message login-success" role="status">
+            <p
+              className="login-message login-success"
+              role="status"
+            >
               {success}
             </p>
           )}

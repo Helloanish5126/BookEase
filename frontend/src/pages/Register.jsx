@@ -3,6 +3,11 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./Register.css";
 
+const API_BASE_URL = (
+  import.meta.env.VITE_API_BASE_URL ||
+  "http://localhost:8080"
+).replace(/\/+$/, "");
+
 function Register() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -19,7 +24,12 @@ function Register() {
     setError("");
     setSuccess("");
 
-    if (!name.trim() || !email.trim() || !phoneNumber.trim() || !password) {
+    if (
+      !name.trim() ||
+      !email.trim() ||
+      !phoneNumber.trim() ||
+      !password
+    ) {
       setError("Please fill in all fields.");
       return;
     }
@@ -28,7 +38,7 @@ function Register() {
 
     try {
       const response = await fetch(
-        "http://localhost:8080/api/users/register",
+        `${API_BASE_URL}/api/users/register`,
         {
           method: "POST",
           headers: {
@@ -53,7 +63,9 @@ function Register() {
         );
       }
 
-      setSuccess("Account created successfully! Redirecting to login...");
+      setSuccess(
+        "Account created successfully! Redirecting to login..."
+      );
 
       setTimeout(() => {
         navigate("/login", { replace: true });
@@ -61,7 +73,7 @@ function Register() {
     } catch (err) {
       setError(
         err.message === "Failed to fetch"
-          ? "Cannot connect to the server. Make sure your backend is running."
+          ? "Cannot connect to BookEase. Please try again later."
           : err.message
       );
     } finally {
@@ -80,59 +92,88 @@ function Register() {
           Create your account to book and manage appointments.
         </p>
 
-        <form className="register-form" onSubmit={handleRegister}>
-          <label htmlFor="register-name">Full Name</label>
+        <form
+          className="register-form"
+          onSubmit={handleRegister}
+        >
+          <label htmlFor="register-name">
+            Full Name
+          </label>
+
           <input
             id="register-name"
             type="text"
             placeholder="Enter your full name"
             value={name}
-            onChange={(event) => setName(event.target.value)}
+            onChange={(event) =>
+              setName(event.target.value)
+            }
             autoComplete="name"
             required
           />
 
-          <label htmlFor="register-email">Email Address</label>
+          <label htmlFor="register-email">
+            Email Address
+          </label>
+
           <input
             id="register-email"
             type="email"
             placeholder="Enter your email"
             value={email}
-            onChange={(event) => setEmail(event.target.value)}
+            onChange={(event) =>
+              setEmail(event.target.value)
+            }
             autoComplete="email"
             required
           />
 
-          <label htmlFor="register-phone">Phone Number</label>
+          <label htmlFor="register-phone">
+            Phone Number
+          </label>
+
           <input
             id="register-phone"
             type="tel"
             placeholder="Enter your phone number"
             value={phoneNumber}
-            onChange={(event) => setPhoneNumber(event.target.value)}
+            onChange={(event) =>
+              setPhoneNumber(event.target.value)
+            }
             autoComplete="tel"
             required
           />
 
-          <label htmlFor="register-password">Password</label>
+          <label htmlFor="register-password">
+            Password
+          </label>
+
           <input
             id="register-password"
             type="password"
             placeholder="Create a password"
             value={password}
-            onChange={(event) => setPassword(event.target.value)}
+            onChange={(event) =>
+              setPassword(event.target.value)
+            }
             autoComplete="new-password"
             required
           />
 
           {error && (
-            <p className="register-message register-error" role="alert">
+            <p
+              className="register-message register-error"
+              role="alert"
+            >
               {error}
             </p>
           )}
 
           {success && (
-            <p className="register-message register-success" role="status">
+            <p
+              className="register-message register-success"
+              role="status"
+            >
               {success}
             </p>
           )}
@@ -142,12 +183,15 @@ function Register() {
             className="register-button"
             disabled={loading}
           >
-            {loading ? "Creating Account..." : "Create Account"}
+            {loading
+              ? "Creating Account..."
+              : "Create Account"}
           </button>
         </form>
 
         <p className="register-login-link">
-          Already have an account? <Link to="/login">Log in</Link>
+          Already have an account?{" "}
+          <Link to="/login">Log in</Link>
         </p>
       </div>
     </div>

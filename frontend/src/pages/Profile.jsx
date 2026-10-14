@@ -3,12 +3,21 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "./Profile.css";
 
+const API_BASE_URL = (
+  import.meta.env.VITE_API_BASE_URL ||
+  "http://localhost:8080"
+).replace(/\/+$/, "");
+
 function formatDate(value) {
   if (!value) return "Date unavailable";
 
-  const date = new Date(`${String(value).slice(0, 10)}T00:00:00`);
+  const date = new Date(
+    `${String(value).slice(0, 10)}T00:00:00`
+  );
 
-  if (Number.isNaN(date.getTime())) return "Date unavailable";
+  if (Number.isNaN(date.getTime())) {
+    return "Date unavailable";
+  }
 
   return date.toLocaleDateString("en-IN", {
     day: "numeric",
@@ -22,6 +31,7 @@ function formatTime(value) {
 
   const [hours, minutes] = String(value).split(":");
   const date = new Date();
+
   date.setHours(Number(hours), Number(minutes), 0, 0);
 
   return date.toLocaleTimeString("en-IN", {
@@ -38,7 +48,11 @@ function Profile() {
 
   useEffect(() => {
     try {
-      setUser(JSON.parse(localStorage.getItem("bookeaseUser") || "null"));
+      setUser(
+        JSON.parse(
+          localStorage.getItem("bookeaseUser") || "null"
+        )
+      );
     } catch {
       setUser(null);
     }
@@ -70,28 +84,34 @@ function Profile() {
         setError("");
 
         const response = await fetch(
-          `http://localhost:8080/api/appointments/user/${savedUser.id}`
+          `${API_BASE_URL}/api/appointments/user/${savedUser.id}`
         );
 
         if (!response.ok) {
-          throw new Error("Could not load your appointments.");
+          throw new Error(
+            "Could not load your appointments."
+          );
         }
 
         const data = await response.json();
 
         if (!cancelled) {
-          setAppointments(Array.isArray(data) ? data : []);
+          setAppointments(
+            Array.isArray(data) ? data : []
+          );
         }
       } catch (err) {
         if (!cancelled) {
           setError(
             err.message === "Failed to fetch"
-              ? "Cannot connect to BookEase. Check that the backend is running."
+              ? "Cannot connect to BookEase. Please try again later."
               : err.message
           );
         }
       } finally {
-        if (!cancelled) setLoading(false);
+        if (!cancelled) {
+          setLoading(false);
+        }
       }
     }
 
@@ -106,25 +126,39 @@ function Profile() {
   today.setHours(0, 0, 0, 0);
 
   const upcoming = appointments.filter((appointment) => {
-    if (appointment.status === "CANCELLED") return false;
+    if (appointment.status === "CANCELLED") {
+      return false;
+    }
 
     const dateValue =
-      appointment.timeSlot?.slotDate || appointment.bookingDate;
+      appointment.timeSlot?.slotDate ||
+      appointment.bookingDate;
 
     if (!dateValue) return true;
 
-    return new Date(`${String(dateValue).slice(0, 10)}T00:00:00`) >= today;
+    return (
+      new Date(
+        `${String(dateValue).slice(0, 10)}T00:00:00`
+      ) >= today
+    );
   });
 
   const past = appointments.filter((appointment) => {
-    if (appointment.status === "CANCELLED") return true;
+    if (appointment.status === "CANCELLED") {
+      return true;
+    }
 
     const dateValue =
-      appointment.timeSlot?.slotDate || appointment.bookingDate;
+      appointment.timeSlot?.slotDate ||
+      appointment.bookingDate;
 
     if (!dateValue) return false;
 
-    return new Date(`${String(dateValue).slice(0, 10)}T00:00:00`) < today;
+    return (
+      new Date(
+        `${String(dateValue).slice(0, 10)}T00:00:00`
+      ) < today
+    );
   });
 
   function renderAppointment(appointment) {
@@ -132,12 +166,18 @@ function Profile() {
     const slot = appointment.timeSlot || {};
 
     return (
-      <article className="order-card" key={appointment.id}>
+      <article
+        className="order-card"
+        key={appointment.id}
+      >
         <div className="order-card-top">
           <div>
             <h3>{service.name || "Appointment"}</h3>
+
             <p className="order-date">
-              {formatDate(slot.slotDate || appointment.bookingDate)}
+              {formatDate(
+                slot.slotDate || appointment.bookingDate
+              )}
             </p>
           </div>
 
@@ -153,13 +193,17 @@ function Profile() {
         <div className="order-card-details">
           <p>
             <strong>Time:</strong>{" "}
-            {formatTime(slot.startTime) || "Time unavailable"}
-            {slot.endTime ? ` – ${formatTime(slot.endTime)}` : ""}
+            {formatTime(slot.startTime) ||
+              "Time unavailable"}
+            {slot.endTime
+              ? ` – ${formatTime(slot.endTime)}`
+              : ""}
           </p>
 
           {service.duration != null && (
             <p>
-              <strong>Duration:</strong> {service.duration} minutes
+              <strong>Duration:</strong>{" "}
+              {service.duration} minutes
             </p>
           )}
 
@@ -182,7 +226,9 @@ function Profile() {
       <div className="profile-header">
         <p className="profile-eyebrow">YOUR ACCOUNT</p>
         <h1>My Account</h1>
-        <p>Manage your profile and keep track of your bookings.</p>
+        <p>
+          Manage your profile and keep track of your bookings.
+        </p>
       </div>
 
       <section className="profile-card">
@@ -194,7 +240,9 @@ function Profile() {
           <h2>{user?.name || "BookEase User"}</h2>
           <p>{user?.email || "Email not available"}</p>
           <p>
-            {user?.phoneNumber || user?.phone || "Phone number not available"}
+            {user?.phoneNumber ||
+              user?.phone ||
+              "Phone number not available"}
           </p>
         </div>
       </section>
@@ -218,8 +266,13 @@ function Profile() {
           <div className="orders-placeholder">
             <span className="orders-icon">▤</span>
             <h3>No bookings yet</h3>
-            <p>Your confirmed appointments will appear here.</p>
-            <Link to="/services" className="orders-browse-link">
+            <p>
+              Your confirmed appointments will appear here.
+            </p>
+            <Link
+              to="/services"
+              className="orders-browse-link"
+            >
               Explore Services →
             </Link>
           </div>
@@ -234,7 +287,9 @@ function Profile() {
               {upcoming.length > 0 ? (
                 upcoming.map(renderAppointment)
               ) : (
-                <p className="orders-empty-text">No upcoming appointments.</p>
+                <p className="orders-empty-text">
+                  No upcoming appointments.
+                </p>
               )}
             </div>
 
@@ -247,7 +302,9 @@ function Profile() {
               {past.length > 0 ? (
                 past.map(renderAppointment)
               ) : (
-                <p className="orders-empty-text">No past appointments.</p>
+                <p className="orders-empty-text">
+                  No past appointments.
+                </p>
               )}
             </div>
           </div>
